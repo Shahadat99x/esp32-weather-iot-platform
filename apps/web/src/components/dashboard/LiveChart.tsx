@@ -5,6 +5,33 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, Area
 import { clsx } from 'clsx';
 // Wait, prompt said "No huge dependencies". date-fns is standard but manual JS date is fine for simple stuff.
 
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{ value: number; }>;
+  label?: string | number;
+}
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-black/80 border border-white/10 p-3 rounded-lg backdrop-blur-md shadow-xl text-xs">
+        <p className="text-white/60 mb-2">{label ? new Date(label).toLocaleTimeString() : ''}</p>
+        <div className="flex flex-col gap-1">
+          <p className="text-white font-medium flex items-center justify-between gap-4">
+            <span className="text-sky-400">Temp</span>
+            <span>{Number(payload[0].value).toFixed(1)}°C</span>
+          </p>
+          <p className="text-white font-medium flex items-center justify-between gap-4">
+            <span className="text-blue-400">Humidity</span>
+            <span>{Number(payload[1].value).toFixed(1)}%</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 interface LiveChartProps {
   data: Reading[]; // Assumed sorted ascending by time
   rangeLabel: string;
@@ -27,26 +54,7 @@ export function LiveChart({ data, rangeLabel, loading }: LiveChartProps) {
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-black/80 border border-white/10 p-3 rounded-lg backdrop-blur-md shadow-xl text-xs">
-          <p className="text-white/60 mb-2">{new Date(label).toLocaleTimeString()}</p>
-          <div className="flex flex-col gap-1">
-            <p className="text-white font-medium flex items-center justify-between gap-4">
-              <span className="text-sky-400">Temp</span>
-              <span>{Number(payload[0].value).toFixed(1)}°C</span>
-            </p>
-            <p className="text-white font-medium flex items-center justify-between gap-4">
-              <span className="text-blue-400">Humidity</span>
-              <span>{Number(payload[1].value).toFixed(1)}%</span>
-            </p>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+
 
   return (
     <div className="w-full h-[300px] md:h-[400px] bg-white/5 rounded-2xl border border-white/10 p-4 relative">

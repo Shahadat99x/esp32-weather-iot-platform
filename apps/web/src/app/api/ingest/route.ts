@@ -3,19 +3,12 @@ import { ReadingPayloadSchema } from '@/lib/server/validate';
 import { validateDeviceKey } from '@/lib/server/auth';
 import { checkRateLimit } from '@/lib/server/rateLimit';
 import { supabaseAdmin } from '@/lib/server/supabase';
+import { z } from 'zod';
 
 export async function POST(req: NextRequest) {
   try {
     // 1. Parse Body
-    let body;
-    try {
-      body = await req.json();
-    } catch (e) {
-      return NextResponse.json(
-        { ok: false, error: { code: 'INVALID_JSON', message: 'Invalid JSON body' } },
-        { status: 400 }
-      );
-    }
+    const body = await req.json();
 
     // 2. Validate Payload Shape (Zod)
     const payload = ReadingPayloadSchema.safeParse(body);
@@ -46,12 +39,36 @@ export async function POST(req: NextRequest) {
     }
 
     // 5. Data Normalization
+    // Normalize fail_pct to 0-100 if it's 0-1
     let failPct = data.fail_pct;
     if (failPct !== undefined && failPct <= 1 && failPct > 0) {
       failPct = failPct * 100;
     }
 
-    // 6. DB Write - inserted_id will be returned
+    // 6. DB Write - Devices Table (Upsert)
+    // Update last_seen_at. If device doesn't exist, create it.
+    const { error: deviceError } = await supabaseAdmin
+      .from('devices')
+      .upsert(
+        { 
+          device_id: deviceId,
+          last_seen_at: new Date().toISOString(),
+          // Don't overwrite name if it exists, but need to provide it for insert.
+          // Upsert handling in Supabase with 'ignoreDuplicates' or just letting defaults handle it is tricky if we want to update one field but keep others.
+          // Simple upsert here updates everything provided. We only provide keys + last_seen_at.
+          // Wait, if we upsert with just device_id and last_seen_at, name might be null if new?
+          // Default for name is 'New Device' in schema. So valid.
+        },
+        { onConflict: 'device_id' }
+      );
+    
+    if (deviceError) {
+      console.error('Device upsert failed:', deviceError);
+      // We continue? Or fail? Best to fail if we strictly track devices.
+      // But readings are more important. Let's try to insert reading anyway but log this.
+    }
+
+    // 7. DB Write - Readings Table
     const { data: inserted, error: readingError } = await supabaseAdmin
       .from('readings')
       .insert({
@@ -67,9 +84,9 @@ export async function POST(req: NextRequest) {
         hum_avg: data.hum_avg,
         fail_pct: failPct,
         health: data.health,
-        raw_json: body
+        raw_json: body // Store full original payload
       })
-      .select('id')
+      .select()
       .single();
 
     if (readingError) {
@@ -80,28 +97,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 7. Update Last Seen (Fire and Forget)
-    // We already validated deviceId exists in env (via auth check), so it's a known device.
-    // Ideally we assume the device row exists. If not, we should probably create it.
-    // Given the auth check passes, we know the device is "known" in our config.
-    // So we can upsert strictly.
-    /*
-      Note: Since auth passed, 'deviceId' matches a key in our env variables.
-      So we can treat this device as valid.
-    */
-    supabaseAdmin.from('devices').upsert({
-      device_id: deviceId,
-      last_seen_at: new Date().toISOString()
-    }, { onConflict: 'device_id' }).then(({ error }) => {
-      if (error) console.error('Background device upsert failed:', error);
-    });
-
     return NextResponse.json({ ok: true, inserted_id: inserted.id });
 
   } catch (err) {
     console.error('Ingest error:', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Unknown error' } },
+      { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Unknown error processing request' } },
       { status: 500 }
     );
   }
