@@ -93,7 +93,7 @@ void setup() {
   // Set Wi-Fi to Station mode
   WiFi.mode(WIFI_STA);
   // Don't auto-connect to old creds, we manage it explicitly
-  WiFi.setAutoConnect(false);
+  WiFi.setAutoReconnect(true);
 }
 
 void loop() {
