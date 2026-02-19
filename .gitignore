@@ -24,3 +24,4 @@ firmware/**/.pio/
 
 # OS
 Thumbs.db
+secrets.h
