@@ -5,6 +5,8 @@ import { checkRateLimit } from '@/lib/server/rateLimit';
 import { supabaseAdmin } from '@/lib/server/supabase';
 import { z } from 'zod';
 
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     // 1. Parse Body
