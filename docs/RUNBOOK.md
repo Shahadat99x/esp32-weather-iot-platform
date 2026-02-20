@@ -28,7 +28,47 @@ npm run dev
 # API running at http://localhost:3000/api/...
 ```
 
-## Verification (Curl Tests)
+## Production Verification (Curl Tests)
+
+### 1. Health Check
+
+```bash
+curl https://wxlive.vercel.app/api/health
+# Expected: {"ok":true,"time":"...","version":"0.4.0"}
+```
+
+### 2. Fetch Latest
+
+```bash
+curl "https://wxlive.vercel.app/api/latest?device_id=esp32-lab-01"
+# Expected: {"ok":true,"data":{...}}
+```
+
+### 3. Fetch Range
+
+```bash
+curl "https://wxlive.vercel.app/api/range?device_id=esp32-lab-01&minutes=10"
+# Expected: {"ok":true,"data":[...]}
+```
+
+### 4. Ingest Data (Template)
+
+```bash
+curl -X POST https://wxlive.vercel.app/api/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-device-key: your_device_key_here" \
+  -d '{
+    "device_id": "esp32-lab-01",
+    "ts_ms": 10000,
+    "uptime_s": 10,
+    "temp_c": 25.5,
+    "hum_pct": 60.0,
+    "status": "OK"
+  }'
+# Expected: {"ok":true,"inserted_id":...}
+```
+
+## Local Verification (Curl Tests)
 
 ### 1. Health Check
 
