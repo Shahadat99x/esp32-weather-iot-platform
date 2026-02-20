@@ -39,12 +39,12 @@ export function DeviceHealthCard({ reading }: DeviceHealthCardProps) {
             <span className="font-mono text-sm">{fw ?? 'N/A'}</span>
          </div>
          
-         <div className="flex flex-col gap-1">
-            <span className="text-xs text-white/40 flex items-center gap-1">
-                {fail_pct && fail_pct > 5 ? <AlertTriangle size={12} className="text-red-400"/> : <CheckCircle2 size={12} className="text-green-400"/>}
-                Failure Rate
+         <div className="flex flex-col gap-1 col-span-2 mt-2 pt-4 border-t border-white/5 text-center items-center justify-center">
+            <span className="text-xs text-white/40 flex items-center gap-1 mb-1">
+                {fail_pct && fail_pct > 5 ? <AlertTriangle size={14} className="text-red-400"/> : <CheckCircle2 size={14} className="text-green-400"/>}
+                Transmission Failure Rate
             </span>
-            <span className={clsx("font-mono text-sm", (fail_pct ?? 0) > 5 ? "text-red-400" : "text-green-400")}>
+            <span className={clsx("font-mono text-2xl font-semibold", (fail_pct ?? 0) > 5 ? "text-red-400" : "text-green-400")}>
                 {fail_pct?.toFixed(1) ?? '0.0'}%
             </span>
          </div>

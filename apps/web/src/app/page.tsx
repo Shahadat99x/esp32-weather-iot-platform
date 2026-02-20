@@ -120,7 +120,7 @@ export default function DashboardPage() {
       <div className="max-w-5xl mx-auto flex flex-col gap-8">
         
         {/* Header */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
               Weather Station
@@ -131,12 +131,12 @@ export default function DashboardPage() {
             </p>
           </div>
           
-          <div className="flex gap-2 bg-zinc-800/50 p-1 rounded-lg backdrop-blur-sm border border-white/5">
+          <div className="flex flex-wrap items-center justify-start gap-2 bg-zinc-800/50 p-1.5 rounded-lg backdrop-blur-sm border border-white/5 w-full md:w-auto">
             {DASHBOARD_CONFIG.RANGES.map(r => (
               <button
                 key={r.label}
                 onClick={() => setRangeMinutes(r.minutes)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex-1 md:flex-none text-center ${
                   rangeMinutes === r.minutes 
                     ? 'bg-zinc-700 text-white shadow-sm' 
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
@@ -147,7 +147,7 @@ export default function DashboardPage() {
             ))}
              <button
                 onClick={() => { fetchLatest(); fetchHistory(); }}
-                className="px-3 py-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all border-l border-white/5 ml-1"
+                className="px-4 py-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all border-white/5 md:border-l flex md:ml-1 items-center justify-center flex-1 md:flex-none bg-zinc-800/30 md:bg-transparent mt-1 md:mt-0"
                 title="Refresh Now"
               >
                 <RefreshCw size={14} className={loadingHistory ? 'animate-spin' : ''} />
