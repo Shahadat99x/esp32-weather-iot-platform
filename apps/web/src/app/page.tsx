@@ -115,7 +115,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-zinc-900 via-zinc-900 to-black text-zinc-100 font-sans selection:bg-sky-500/30">
+    <main className="min-h-screen p-4 md:p-8 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-900/60 via-zinc-950 to-black text-zinc-100 font-sans selection:bg-sky-500/30">
       
       <div className="max-w-5xl mx-auto flex flex-col gap-8">
         
@@ -173,7 +173,7 @@ export default function DashboardPage() {
             <DeviceHealthCard reading={latest} />
             
             {/* Summary / Trend Mini Card? */}
-            <div className="flex-1 min-h-[150px] p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/10 backdrop-blur-sm relative overflow-hidden">
+            <div className="flex-1 min-h-[150px] p-6 rounded-3xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-white/10 backdrop-blur-2xl relative overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
                <div className="absolute top-0 right-0 p-32 bg-indigo-500/20 blur-3xl rounded-full pointer-events-none -mr-16 -mt-16" />
                <h3 className="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Daily Insight</h3>
                <p className="text-lg text-white/90">

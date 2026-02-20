@@ -25,7 +25,7 @@ export function MetricGrid({ reading }: MetricGridProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
       {metrics.map((m) => (
-        <div key={m.label} className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm flex flex-col gap-1">
+        <div key={m.label} className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-lg shadow-xl shadow-black/20 flex flex-col gap-1.5 transition-all hover:bg-white/[0.08] hover:border-white/20 ring-1 ring-white/5 group">
           <div className="flex items-center gap-2 text-white/50 text-xs font-medium uppercase tracking-wider">
             <m.icon size={14} className={m.color} /> {m.label}
           </div>

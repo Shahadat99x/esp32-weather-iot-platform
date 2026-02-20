@@ -37,7 +37,7 @@ export function NowCard({ reading, loading, isOffline, lastUpdatedSeconds }: Now
   const feelsLike = calculateFeelsLike(temp, hum);
 
   return (
-    <div className="relative w-full p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl overflow-hidden text-white">
+    <div className="relative w-full p-6 md:p-8 rounded-3xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden text-white ring-1 ring-white/5">
       {/* Background Glow */}
       <div className={clsx(
         "absolute -top-20 -right-20 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none",

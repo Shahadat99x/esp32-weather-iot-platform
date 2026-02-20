@@ -22,7 +22,7 @@ export function DeviceHealthCard({ reading }: DeviceHealthCardProps) {
   };
 
   return (
-    <div className="w-full p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex flex-col gap-4 text-white">
+    <div className="w-full p-6 rounded-3xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 flex flex-col gap-4 text-white ring-1 ring-white/5">
       <h3 className="text-sm font-semibold text-white/50 uppercase tracking-wider flex items-center justify-between">
         <span>Device Status</span>
         <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-white/70">{device_id}</span>

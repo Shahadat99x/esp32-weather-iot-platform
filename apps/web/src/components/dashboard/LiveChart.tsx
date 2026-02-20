@@ -57,7 +57,7 @@ export function LiveChart({ data, rangeLabel, loading }: LiveChartProps) {
 
 
   return (
-    <div className="w-full h-[300px] md:h-[400px] bg-white/5 rounded-2xl border border-white/10 p-4 relative">
+    <div className="w-full h-[300px] md:h-[400px] bg-white/[0.02] rounded-3xl border border-white/10 p-4 relative shadow-2xl shadow-black/50 backdrop-blur-sm ring-1 ring-white/5">
        {/* Chart */}
        <ResponsiveContainer width="100%" height="100%">
          <AreaChart data={data}>
