@@ -2,6 +2,7 @@
 
 import { Reading } from '@/lib/types';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart, CartesianGrid } from 'recharts';
+import { Radio } from 'lucide-react';
 import { clsx } from 'clsx';
 // Wait, prompt said "No huge dependencies". date-fns is standard but manual JS date is fine for simple stuff.
 
@@ -121,8 +122,10 @@ export function LiveChart({ data, rangeLabel, loading }: LiveChartProps) {
        </ResponsiveContainer>
        
        {data.length === 0 && !loading && (
-           <div className="absolute inset-0 flex items-center justify-center text-white/30">
-               No data for this range
+           <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50 bg-black/20 backdrop-blur-sm rounded-3xl z-10 border border-white/5 mx-4 mb-4">
+               <Radio size={32} className="mb-3 opacity-50" />
+               <p className="font-medium text-white/80">No data for this range</p>
+               <p className="text-xs text-white/40 mt-1">Start device or increase the time range</p>
            </div>
        )}
     </div>

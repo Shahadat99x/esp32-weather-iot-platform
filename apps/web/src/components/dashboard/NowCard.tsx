@@ -36,6 +36,14 @@ export function NowCard({ reading, loading, isOffline, lastUpdatedSeconds }: Now
   const comfort = getComfortLabel(temp, hum);
   const feelsLike = calculateFeelsLike(temp, hum);
 
+  const formatTimeAgo = (seconds: number) => {
+    if (seconds < 60) return `${Math.floor(seconds)}s ago`;
+    const mins = Math.floor(seconds / 60);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    return `${hours}h ${mins % 60}m ago`;
+  };
+
   return (
     <div className="relative w-full p-6 md:p-8 rounded-3xl bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden text-white ring-1 ring-white/5">
       {/* Background Glow */}
@@ -87,8 +95,8 @@ export function NowCard({ reading, loading, isOffline, lastUpdatedSeconds }: Now
             </div>
           </div>
 
-          <div className="text-right text-xs text-white/40">
-            Updated {lastUpdatedSeconds}s ago
+          <div className="text-right text-xs text-white/40 font-medium">
+            Updated {formatTimeAgo(lastUpdatedSeconds)}
           </div>
         </div>
       </div>

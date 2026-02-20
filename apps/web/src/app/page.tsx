@@ -108,8 +108,9 @@ export default function DashboardPage() {
   // Initial Full Loading State (only if no data at all)
   if (loadingLatest && !latest) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white">
-        <Loader2 className="animate-spin text-sky-500" size={48} />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-900/60 via-zinc-950 to-black text-white">
+        <Loader2 className="animate-spin text-sky-500/80 mb-4" size={48} />
+        <p className="text-white/50 text-sm tracking-widest uppercase font-medium">Connecting to Station...</p>
       </div>
     );
   }
@@ -127,7 +128,7 @@ export default function DashboardPage() {
             </h1>
             <p className="text-sm text-zinc-500 font-mono mt-1 flex items-center gap-2">
               ID: <span className="text-zinc-400">{deviceId}</span>
-              {isOffline && <span className="text-red-500 flex items-center gap-1"><AlertTriangle size={12}/> Connection Lost</span>}
+              {isOffline && <span className="text-red-400 flex items-center gap-1 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20"><AlertTriangle size={12}/> Offline</span>}
             </p>
           </div>
           
