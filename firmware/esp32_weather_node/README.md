@@ -20,10 +20,12 @@ Edit `firmware/esp32_weather_node/config.h` to change:
 - `READ_INTERVAL_MS`
 - Validation ranges and smoothing window size
 
-## Wi-Fi Setup (Phase 2)
+## Wi-Fi & API Setup (Phase 2 & Phase 6)
 
 1. Rename `firmware/esp32_weather_node/secrets.h.example` to `secrets.h`.
 2. Edit `secrets.h` and enter your Hotspot SSID and Password.
+3. Keep `INGEST_URL` as `http://10.5.0.2:3000/api/ingest` for local testing OR change it to your Vercel production domain (`https://wxlive.vercel.app/api/ingest`).
+4. Set `DEVICE_KEY` to match the secret configured in your Vercel `.env.local` or environment variables.
 
 > **Note**: `secrets.h` is ignored by git to protect your credentials.
 
