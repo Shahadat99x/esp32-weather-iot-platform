@@ -40,9 +40,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 5. Data Normalization
+    // 5. Data Normalization & Mapping
+    const temp_c = body.sensor?.temp_c ?? body.temp_c ?? null;
+    const hum_pct = body.sensor?.hum_pct ?? body.hum_pct ?? null;
+    const temp_avg = body.sensor?.temp_c_avg ?? body.temp_avg ?? null;
+    const hum_avg = body.sensor?.hum_pct_avg ?? body.hum_avg ?? null;
+    const health = body.sensor?.health_score ?? body.health ?? null;
+    const rssi = body.rssi ?? null;
+    const fw = body.fw_version ?? body.fw ?? null;
+    const uptime_s = body.uptime_s ?? (body.uptime_ms ? Math.floor(body.uptime_ms / 1000) : null);
+    const status = body.status ?? "OK";
+
     // Normalize fail_pct to 0-100 if it's 0-1
-    let failPct = data.fail_pct;
+    let failPct = body.fail_pct;
     if (failPct !== undefined && failPct <= 1 && failPct > 0) {
       failPct = failPct * 100;
     }
@@ -76,16 +86,16 @@ export async function POST(req: NextRequest) {
       .insert({
         device_id: deviceId,
         device_ts_ms: data.ts_ms,
-        fw: data.fw,
-        uptime_s: data.uptime_s,
-        rssi: data.rssi,
-        status: data.status,
-        temp_c: data.temp_c,
-        hum_pct: data.hum_pct,
-        temp_avg: data.temp_avg,
-        hum_avg: data.hum_avg,
+        fw: fw,
+        uptime_s: uptime_s,
+        rssi: rssi,
+        status: status,
+        temp_c: temp_c,
+        hum_pct: hum_pct,
+        temp_avg: temp_avg,
+        hum_avg: hum_avg,
         fail_pct: failPct,
-        health: data.health,
+        health: health,
         raw_json: body // Store full original payload
       })
       .select()

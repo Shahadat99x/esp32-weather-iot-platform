@@ -13,6 +13,6 @@ export const ReadingPayloadSchema = z.object({
   hum_avg: z.number().nullable().optional(),
   fail_pct: z.number().min(0).optional(), // Can be 0..1 or 0..100, normalized later
   health: z.number().min(0).max(100).optional(),
-});
+}).passthrough();
 
 export type ReadingPayload = z.infer<typeof ReadingPayloadSchema>;
