@@ -51,7 +51,7 @@ curl "https://wxlive.vercel.app/api/range?device_id=esp32-lab-01&minutes=10"
 # Expected: {"ok":true,"data":[...]}
 ```
 
-### 4. Ingest Data (Template)
+### 4. Ingest Data (Flat Payload Template)
 
 ```bash
 curl -X POST https://wxlive.vercel.app/api/ingest \
@@ -68,6 +68,29 @@ curl -X POST https://wxlive.vercel.app/api/ingest \
 # Expected: {"ok":true,"inserted_id":...}
 ```
 
+### 5. Ingest Data (Nested Payload - ESP32 Firmware)
+
+```bash
+curl -X POST https://wxlive.vercel.app/api/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-device-key: your_device_key_here" \
+  -d '{
+    "device_id": "esp32-lab-01",
+    "fw_version": "0.2.0",
+    "uptime_ms": 159564,
+    "ts_ms": 159564,
+    "rssi": -24,
+    "sensor": {
+      "temp_c": 31.8,
+      "hum_pct": 23.4,
+      "temp_c_avg": 31.2,
+      "hum_pct_avg": 23.6,
+      "health_score": 100
+    }
+  }'
+# Expected: {"ok":true,"inserted_id":...}
+```
+
 ## Local Verification (Curl Tests)
 
 ### 1. Health Check
@@ -77,7 +100,7 @@ curl http://localhost:3000/api/health
 # Expected: {"ok":true,"time":"...","version":"0.4.0"}
 ```
 
-### 2. Ingest Data (Valid)
+### 2. Ingest Data (Valid Flat Payload)
 
 ```bash
 curl -X POST http://localhost:3000/api/ingest \
@@ -90,6 +113,29 @@ curl -X POST http://localhost:3000/api/ingest \
     "temp_c": 25.5,
     "hum_pct": 60.0,
     "status": "OK"
+  }'
+# Expected: {"ok":true,"inserted_id":...}
+```
+
+### 3. Ingest Data (Valid Nested Payload)
+
+```bash
+curl -X POST http://localhost:3000/api/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-device-key: secret-123" \
+  -d '{
+    "device_id": "esp32-lab-01",
+    "fw_version": "0.2.0",
+    "uptime_ms": 159564,
+    "ts_ms": 159564,
+    "rssi": -24,
+    "sensor": {
+      "temp_c": 31.8,
+      "hum_pct": 23.4,
+      "temp_c_avg": 31.2,
+      "hum_pct_avg": 23.6,
+      "health_score": 100
+    }
   }'
 # Expected: {"ok":true,"inserted_id":...}
 ```
