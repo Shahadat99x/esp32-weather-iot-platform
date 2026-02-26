@@ -1,13 +1,18 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// --- Demo Mode ---
+// Set to 1 for live demos (fast send, aggressive polling)
+// Set to 0 for normal/production (slower, cheaper)
+#define DEMO_MODE 1
+
 // --- Hardware Settings ---
 // Pin connected to the DHT sensor
 // Recommended Pins: 27, 32, 33 (Avoid strap pins 0, 2, 12, 15)
-#define DHT_PIN 4      
+#define DHT_PIN 4
 
 // Sensor Type: DHT11, DHT22, or DHT21 (AM2301)
-#define DHT_TYPE DHT22 
+#define DHT_TYPE DHT22
 
 // --- Timing Settings ---
 // Interval between sensor reads in milliseconds
@@ -25,15 +30,29 @@
 
 // Phase 5: Sending & Outbox
 #define SEND_ENABLED true
-#define SEND_MIN_INTERVAL_MS 2000
+#if DEMO_MODE
+#define SEND_MIN_INTERVAL_MS 3000 // Demo: send every 3s
+#else
+#define SEND_MIN_INTERVAL_MS 15000 // Normal: send every 15s
+#endif
 #define HTTP_TIMEOUT_MS 6000
 #define OUTBOX_MAX 50
 #define FLUSH_MAX_PER_TICK 3
 #define LOG_OUTBOX_EVERY_N_TICKS 10
 
+// Phase 2: NTP Time Sync
+#define NTP_SERVER_1 "pool.ntp.org"
+#define NTP_SERVER_2 "time.nist.gov"
+#define NTP_SYNC_TIMEOUT_MS 10000
+
+// Phase 2: Burst Drain (fast outbox flush after Wi-Fi reconnect)
+#define BURST_DRAIN_INTERVAL_MS 500
+#define BURST_DRAIN_TIMEOUT_MS 20000
+#define BURST_DRAIN_MAX_PER_TICK 10
+
 // --- Metadata Settings ---
-#define FW_VERSION "0.2.0"
-#define DEVICE_ID_PREFIX "esp32-"
+#define FW_VERSION "0.3.0"
+#define DEVICE_ID_FIXED "esp32-lab-01" // set to null/empty to use MAC id
 
 // --- Logging Settings ---
 // Milliseconds between printing Wi-Fi status summary
@@ -74,6 +93,6 @@
 
 // --- Smoothing Settings ---
 // Number of samples for the moving average window
-#define SMOOTHING_WINDOW 5 
+#define SMOOTHING_WINDOW 5
 
 #endif
