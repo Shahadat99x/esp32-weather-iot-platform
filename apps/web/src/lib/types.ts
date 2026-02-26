@@ -3,6 +3,9 @@ export interface Reading {
   id?: number;
   device_id: string;
   created_at: string; // ISO string
+  device_ts_ms?: number | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  raw_json?: Record<string, any> | null;
   
   // Sensor Data
   temp_c: number | null;
