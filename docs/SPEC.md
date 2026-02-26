@@ -27,6 +27,8 @@
     "fw_version": "0.2.0",
     "uptime_ms": 123456,
     "ts_ms": 123456,
+    "ts_epoch_ms": 1740567890123,
+    "time_synced": true,
     "rssi": -60,
     "sensor": {
       "temp_c": 24.5,
@@ -40,20 +42,22 @@
 
 ### Payload -> Database Mapping
 
-| JSON Field            | DB Column (`readings`) | Type          | Notes           |
-| :-------------------- | :--------------------- | :------------ | :-------------- |
-| `device_id`           | `device_id`            | `text`        | Foreign Key     |
-| `fw_version`          | `fw`                   | `text`        |                 |
-| `uptime_ms`           | `uptime_s`             | `bigint`      | Convert ms -> s |
-| `ts_ms`               | `device_ts_ms`         | `bigint`      |                 |
-| `rssi`                | `rssi`                 | `int`         |                 |
-| `sensor.temp_c`       | `temp_c`               | `real`        |                 |
-| `sensor.hum_pct`      | `hum_pct`              | `real`        |                 |
-| `sensor.temp_c_avg`   | `temp_avg`             | `real`        |                 |
-| `sensor.hum_pct_avg`  | `hum_avg`              | `real`        |                 |
-| `sensor.health_score` | `health`               | `int`         |                 |
-| `(whole json)`        | `raw_json`             | `jsonb`       |                 |
-| `(server time)`       | `created_at`           | `timestamptz` | Default `now()` |
+| JSON Field            | DB Column (`readings`) | Type          | Notes                              |
+| :-------------------- | :--------------------- | :------------ | :--------------------------------- |
+| `device_id`           | `device_id`            | `text`        | Foreign Key                        |
+| `fw_version`          | `fw`                   | `text`        |                                    |
+| `uptime_ms`           | `uptime_s`             | `bigint`      | Convert ms -> s                    |
+| `ts_ms`               | `device_ts_ms`         | `bigint`      | millis() monotonic                 |
+| `ts_epoch_ms`         | _(raw_json only)_      | `bigint`      | Unix epoch ms (NTP). Phase 2 add.  |
+| `time_synced`         | _(raw_json only)_      | `boolean`     | Whether NTP was obtained. Phase 2. |
+| `rssi`                | `rssi`                 | `int`         |                                    |
+| `sensor.temp_c`       | `temp_c`               | `real`        |                                    |
+| `sensor.hum_pct`      | `hum_pct`              | `real`        |                                    |
+| `sensor.temp_c_avg`   | `temp_avg`             | `real`        |                                    |
+| `sensor.hum_pct_avg`  | `hum_avg`              | `real`        |                                    |
+| `sensor.health_score` | `health`               | `int`         |                                    |
+| `(whole json)`        | `raw_json`             | `jsonb`       |                                    |
+| `(server time)`       | `created_at`           | `timestamptz` | Default `now()`                    |
 
 ## Phase 4 - Vercel API
 

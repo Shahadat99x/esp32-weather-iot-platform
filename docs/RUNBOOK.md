@@ -79,6 +79,8 @@ curl -X POST https://wxlive.vercel.app/api/ingest \
     "fw_version": "0.2.0",
     "uptime_ms": 159564,
     "ts_ms": 159564,
+    "ts_epoch_ms": 1740567890123,
+    "time_synced": true,
     "rssi": -24,
     "sensor": {
       "temp_c": 31.8,
@@ -128,6 +130,8 @@ curl -X POST http://localhost:3000/api/ingest \
     "fw_version": "0.2.0",
     "uptime_ms": 159564,
     "ts_ms": 159564,
+    "ts_epoch_ms": 1740567890123,
+    "time_synced": true,
     "rssi": -24,
     "sensor": {
       "temp_c": 31.8,
@@ -138,6 +142,21 @@ curl -X POST http://localhost:3000/api/ingest \
     }
   }'
 # Expected: {"ok":true,"inserted_id":...}
+```
+
+### Latency Computation (Phase 2)
+
+With `ts_epoch_ms` (NTP) and `created_at` (DB), compute end-to-end latency:
+
+```sql
+SELECT
+  created_at,
+  (raw_json->>'ts_epoch_ms')::bigint AS device_epoch_ms,
+  EXTRACT(EPOCH FROM created_at) * 1000 - (raw_json->>'ts_epoch_ms')::bigint AS latency_ms
+FROM readings
+WHERE raw_json->>'time_synced' = 'true'
+ORDER BY created_at DESC
+LIMIT 10;
 ```
 
 ### 3. Auth Failure
