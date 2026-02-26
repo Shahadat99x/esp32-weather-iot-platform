@@ -4,6 +4,8 @@ export const ReadingPayloadSchema = z.object({
   device_id: z.string().min(1),
   fw: z.string().optional(),
   ts_ms: z.number().optional(),
+  ts_epoch_ms: z.number().optional(),       // Phase 2: Unix epoch ms (from NTP)
+  time_synced: z.boolean().optional(),       // Phase 2: true if NTP was obtained
   uptime_s: z.number().optional(),
   rssi: z.number().nullable().optional(),
   status: z.enum(['OK', 'WIFI_DOWN', 'SENSOR_FAIL', 'INIT']).or(z.string()).default('OK'), // Allow string fallback but prefer enum

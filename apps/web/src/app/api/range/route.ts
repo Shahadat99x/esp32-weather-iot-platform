@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/server/supabase';
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -54,5 +55,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: { code: 'DB_ERROR', message: 'Database error' } }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, data: data || [] });
+  const response = NextResponse.json({ ok: true, data: data || [] });
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  return response;
 }

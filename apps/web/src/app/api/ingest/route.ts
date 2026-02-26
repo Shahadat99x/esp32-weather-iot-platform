@@ -8,6 +8,7 @@ import { z } from 'zod';
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  const receivedAt = new Date().toISOString();
   try {
     // 1. Parse Body
     const body = await req.json();
@@ -108,6 +109,11 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Phase 1+2 instrumentation: [INGEST] log
+    console.info(
+      `[INGEST] device_id=${deviceId} device_ts_ms=${data.ts_ms} ts_epoch_ms=${data.ts_epoch_ms ?? 'N/A'} time_synced=${data.time_synced ?? 'N/A'} rssi=${rssi} received_at=${receivedAt} insert=OK inserted_id=${inserted.id}`
+    );
 
     return NextResponse.json({ ok: true, inserted_id: inserted.id });
 

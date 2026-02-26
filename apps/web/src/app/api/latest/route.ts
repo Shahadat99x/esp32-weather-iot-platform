@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/server/supabase';
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin
     .from('readings')
-    .select('created_at, temp_c, hum_pct, status, health, rssi, fw, uptime_s')
+    .select('created_at, device_ts_ms, temp_c, hum_pct, temp_avg, hum_avg, status, health, rssi, fw, uptime_s, raw_json')
     .eq('device_id', deviceId)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -41,5 +42,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: { code: 'DB_ERROR', message: 'Database error' } }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true, data });
+  // Phase 1 instrumentation: [LATEST] log
+  console.info(
+    `[LATEST] device_id=${deviceId} created_at=${data.created_at} served_at=${new Date().toISOString()}`
+  );
+
+  const response = NextResponse.json({ ok: true, data });
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  return response;
 }
